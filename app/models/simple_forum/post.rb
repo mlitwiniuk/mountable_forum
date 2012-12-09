@@ -24,7 +24,7 @@ module SimpleForum
 
     scope :recent, order("#{quoted_table_name}.created_at DESC")
 
-    attr_accessible :body
+    #attr_accessible :body
     validates :topic, :forum, :user, :presence => true
     validates :body, :presence => true
 

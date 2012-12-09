@@ -103,13 +103,21 @@ module SimpleForum
     end
 
     def build_topic
-      @topic = @forum.topics.new params[:topic] do |topic|
+      @topic = @forum.topics.new resource_params do |topic|
         topic.user = authenticated_user
       end
     end
 
     def moderator_required
       redirect_to :back, :alert => t('simple_forum.controllers.you_are_not_permitted_to_perform_this_action') unless @forum.moderated_by?(authenticated_user)
+    end
+
+    def resource_params
+      unless p = params[:topic].presence
+        {}
+      else
+        p.permit(:title, :body)
+      end
     end
 
   end

@@ -5,7 +5,8 @@
 
   <title><%= yield(:title) || '' %></title>
 
-  <%= favicon_link_tag %>
+  <%= #favicon_link_tag 
+  %>
 
   <%= stylesheet_link_tag "simple_forum/admin" %>
 
@@ -56,7 +57,7 @@
       <div id="footer">
         <div class="block">
           <p>
-            Copyright &copy; #{Time.current.year}.
+            Copyright &copy; <%= Time.current.year %>.
           </p>
         </div>
       </div>

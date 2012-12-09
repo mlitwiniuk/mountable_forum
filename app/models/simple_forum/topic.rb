@@ -37,7 +37,7 @@ module SimpleForum
     after_create :create_initial_post
 
     attr_accessor :body
-    attr_accessible :title, :body
+    #attr_accessible :title, :body
 
     def update_cached_post_fields(post)
       if remaining_post = post.frozen? ? last_post : post

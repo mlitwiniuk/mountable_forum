@@ -11,7 +11,7 @@ module SimpleForum
     validates :name, :presence => true
     validates :position, :presence => true, :numericality => {:only_integer => true, :allow_nil => true}
 
-    attr_accessible :name, :body, :position
+    #attr_accessible :name, :body, :position
 
     if respond_to?(:has_friendly_id)
       has_friendly_id :name, :use_slug => true, :approximate_ascii => true

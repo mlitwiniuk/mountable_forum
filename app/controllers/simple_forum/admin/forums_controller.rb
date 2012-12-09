@@ -56,7 +56,7 @@ module SimpleForum
       end
 
       def update
-        success = resource.update_attributes(params[:forum])
+        success = resource.update_attributes(resource_params)
 
         respond_with([:admin, resource]) do |format|
           format.html do
@@ -78,10 +78,17 @@ module SimpleForum
       private
 
       def resource
-        @forum ||= params[:id] ? SimpleForum::Forum.find(params[:id]) : SimpleForum::Forum.new(params[:forum])
+        @forum ||= params[:id] ? SimpleForum::Forum.find(params[:id]) : SimpleForum::Forum.new(resource_params)
       end
-
       helper_method :resource
+
+      def resource_params
+        unless p = params[:forum].presence
+          {}
+        else
+          p.permit(:name, :body, :position, :parent_id, :moderator_ids, :category_id, :is_topicable)
+        end
+      end
 
     end
   end

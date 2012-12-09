@@ -57,7 +57,7 @@ module SimpleForum
     def update
       @post.edited_by = authenticated_user
       @post.edited_at = Time.now
-      success = @post.update_attributes(params[:post])
+      success = @post.update_attributes(resource_params)
 
       respond_to do |format|
         format.html do
@@ -101,13 +101,21 @@ module SimpleForum
     end
 
     def build_post
-      @post = @topic.posts.new params[:post] do |post|
+      @post = @topic.posts.new resource_params do |post|
         post.user = authenticated_user
       end
     end
 
     def post_must_be_editable_by_authenticate_user
       redirect_to :back, :alert => t('simple_forum.controllers.posts.post_cant_be_edited') unless @post.editable_by?(authenticated_user, nil)
+    end
+
+    def resource_params
+      unless p = params[:post].presence
+        {}
+      else
+        p.permit(:body)
+      end
     end
 
   end

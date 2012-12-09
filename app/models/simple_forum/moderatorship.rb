@@ -9,7 +9,7 @@ module SimpleForum
     validates :forum, :user, :presence => true
     validates :user_id, :uniqueness => {:scope => :forum_id, :allow_nil => true}
 
-    attr_accessible :forum_id, :user_id
+    #attr_accessible :forum_id, :user_id
 
   end
 end

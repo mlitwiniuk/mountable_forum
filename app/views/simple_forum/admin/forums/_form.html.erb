@@ -10,16 +10,14 @@
     </style>
 <% end %>
 
-<%= semantic_form_for [:admin, resource], :html => {:class => 'form'} do |f| %>
-    <%= f.semantic_errors %>
-    <%= f.inputs do %>
+<%= simple_form_for [:admin, resource], :html => {:class => 'form'} do |f| %>
         <%= f.input :name %>
         <%= f.input :body %>
         <%= f.input :position %>
         <%= f.input :is_topicable %>
         <%= f.input :category_id, :as => :select, :collection => SimpleForum::Category.all.map { |c| [c.name, c.id] } %>
-    <% end %>
-    <%= f.inputs f.object.class.human_attribute_name(:moderators) do %>
+
+
         <li class="input stringish">
           <%= label_tag 'search_users_input', t('simple_forum.admin/forums.search_users'), :class => 'label' %>
           <%= text_field_tag :user_name_like, "", :id => 'search_users_input', :placeholder => t('simple_forum.admin/forums.search_users', :default => 'Serach users') %>
@@ -40,6 +38,5 @@
             <% end %>
           </ul>
         </li>
-    <% end %>
-    <%= f.actions(:submit) %>
+    <%= f.submit %>
 <% end %>

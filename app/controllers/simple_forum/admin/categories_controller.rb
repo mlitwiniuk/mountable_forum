@@ -1,7 +1,7 @@
 module SimpleForum
   module Admin
     class CategoriesController < ::SimpleForum::Admin::BaseController
-
+      before_filter :cleanup_params
       def index
         @categories = SimpleForum::Category.default_order.all
 
@@ -38,7 +38,7 @@ module SimpleForum
       end
 
       def update
-        success = resource.update_attributes(params[:category])
+        success = resource.update_attributes(resource_params)
 
         respond_with([:admin, resource]) do |format|
           format.html do
@@ -60,10 +60,17 @@ module SimpleForum
       private
 
       def resource
-        @category ||= params[:id] ? SimpleForum::Category.find(params[:id]) : SimpleForum::Category.new(params[:category])
+        @category ||= params[:id] ? SimpleForum::Category.find(params[:id]) : SimpleForum::Category.new(resource_params)
       end
-
       helper_method :resource
+
+      def resource_params
+        unless p = params[:category].presence
+          {}
+        else
+          p.permit(:name, :body, :position)
+        end
+      end
 
     end
   end
