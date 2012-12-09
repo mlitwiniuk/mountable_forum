@@ -1,7 +1,7 @@
 require 'bb-ruby'
 require 'bb-ruby/bb-ruby'
 require 'simple_forum/configuration'
-require 'web-app-theme'
+#require 'web-app-theme'
 require 'formtastic'
 
 module SimpleForum
