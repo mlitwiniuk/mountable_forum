@@ -39,11 +39,11 @@ module SimpleForum
     end
 
     def create
-      success = @topic.save
+      @success = @topic.save
 
       respond_to do |format|
         format.html do
-          if success
+          if @success
             flash[:notice] = t('simple_forum.controllers.topics.topic_created')
             redirect_to simple_forum.forum_topic_url(@forum, @topic)
           else
@@ -51,44 +51,37 @@ module SimpleForum
             render :new
           end
         end
+        format.js 
       end
     end
 
     def open
-      success = if @topic.is_open?
-                  false
-                else
-                  @topic.open!
-                  true
-                end
+      @success = @topic.is_open? ? false : @topic.open!
 
       respond_to do |format|
         format.html do
-          if success
+          if @success
             redirect_to :back, :notice => t('simple_forum.controllers.topics.topic_opened')
           else
             redirect_to :back, :alert => t('simple_forum.controllers.topics.topic_already_opened')
           end
         end
+        format.js
       end
     end
 
     def close
-      success = if @topic.is_open?
-                  @topic.close!
-                  true
-                else
-                  false
-                end
+      @success = @topic.is_open? ? @topic.close! : false
 
       respond_to do |format|
         format.html do
-          if success
+          if @success
             redirect_to :back, :notice => t('simple_forum.controllers.topics.topic_closed')
           else
             redirect_to :back, :alert => t('simple_forum.controllers.topics.topic_already_closed')
           end
         end
+        format.js
       end
     end
 

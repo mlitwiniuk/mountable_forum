@@ -25,12 +25,15 @@ module SimpleForum
       end
     end
 
+    def new
+    end
+
     def create
-      success = @post.save
+      @success = @post.save
 
       respond_to do |format|
         format.html do
-          if success
+          if @success
             redirect_to simple_forum.forum_topic_url(@forum, @topic, :page => @post.on_page, :anchor => "post-#{@post.id}"),
                         :notice => t('simple_forum.controllers.posts.post_created')
           else
@@ -38,6 +41,7 @@ module SimpleForum
                         :alert => @post.errors.full_messages.join(', ')
           end
         end
+        format.js
       end
     end
 
@@ -57,32 +61,34 @@ module SimpleForum
     def update
       @post.edited_by = authenticated_user
       @post.edited_at = Time.now
-      success = @post.update_attributes(resource_params)
+      @success = @post.editable_by?(authenticated_user, @forum.moderated_by?(authenticated_user)) ? @post.update_attributes(resource_params) : false
 
       respond_to do |format|
         format.html do
-          if success
+          if @success
             redirect_to simple_forum.forum_topic_url(@forum, @topic, :page => @post.on_page, :anchor => "post-#{@post.id}"),
                         :notice => t('simple_forum.controllers.posts.post_updated')
           else
             redirect_to :back, :alert => @post.errors.full_messages.join(', ')
           end
         end
+        format.js
       end
     end
 
 
     def delete
-      success = @post.mark_as_deleted_by(authenticated_user) #check if post is deletable by authenticated_user in mark_as_deleted_by method
+      @success = @post.deletable_by?(authenticated_user, @forum.moderated_by?(authenticated_user)) ? @post.mark_as_deleted_by(authenticated_user) : false #check if post is deletable by authenticated_user in mark_as_deleted_by method
 
       respond_to do |format|
         format.html do
-          if success
+          if @success
             redirect_to :back, :notice => t('simple_forum.controllers.posts.post_deleted')
           else
             redirect_to :back, :alert => t('simple_forum.controllers.posts.post_cant_be_deleted')
           end
         end
+        format.js
       end
     end
 
