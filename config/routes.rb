@@ -19,6 +19,7 @@ SimpleForum::Engine.routes.draw do
   namespace :admin do
     resources :forums do
       get :search_users, :on => :collection
+      resources :topics, :only => [:destroy]
     end
     resources :categories
 

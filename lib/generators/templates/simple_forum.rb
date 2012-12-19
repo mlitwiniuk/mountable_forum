@@ -35,4 +35,7 @@ SimpleForum.setup do |config|
   #  current_user && current_user.is_admin?
   #end
 
+  #show posts after deleting?
+  #config.show_deleted_posts = true
+
 end

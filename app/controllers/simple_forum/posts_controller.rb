@@ -103,7 +103,7 @@ module SimpleForum
     end
 
     def find_post
-      @post = @topic.posts.find params[:id]
+      @post = @topic.posts.visible.find params[:id]
     end
 
     def build_post

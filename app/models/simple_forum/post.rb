@@ -83,7 +83,17 @@ module SimpleForum
       return false unless deletable_by?(user, nil)
       self.deleted_at = Time.now
       self.deleted_by = user
-      self.save
+      ret = self.save
+      update_cached_fields
+      ret
+    end
+
+    def self.visible
+      unless SimpleForum.show_deleted_posts
+        where("#{quoted_table_name}.deleted_at is null")
+      else
+        scoped
+      end
     end
 
     protected
@@ -91,7 +101,8 @@ module SimpleForum
     def update_cached_fields
       topic.update_cached_post_fields(self) if topic
       if user && user.respond_to?(:forum_posts_count)
-        user.class.update_all({:forum_posts_count => SimpleForum::Post.where(:user_id => user.id).count}, {:id => user.id})
+        sc = SimpleForum.show_deleted_posts ? Post : Post.visible
+        user.class.update_all({:forum_posts_count => sc.where(:user_id => user.id).count}, {:id => user.id})
       end
     end
 

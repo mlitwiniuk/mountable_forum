@@ -8,6 +8,12 @@ module SimpleForum
     has_many :posts,
              :order => "#{SimpleForum::Post.quoted_table_name}.created_at ASC",
              :class_name => "SimpleForum::Post",
+             :conditions => SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"],
+             :dependent => :delete_all
+
+    has_many :all_posts,
+             :order => "#{SimpleForum::Post.quoted_table_name}.created_at ASC",
+             :class_name => "SimpleForum::Post",
              :dependent => :delete_all
 
     belongs_to :recent_post,
@@ -43,9 +49,10 @@ module SimpleForum
       if remaining_post = post.frozen? ? last_post : post
         self.class.update_all({:last_updated_at => remaining_post.created_at,
                                :recent_post_id => remaining_post.id,
-                               # :posts_count => posts.size
+                               :posts_count => posts.count(:id)
                               }, {:id => id})
-        forum.class.update_all({:recent_post_id => remaining_post.id}, {:id => forum.id})
+        forum.class.update_all({:recent_post_id => remaining_post.id,
+                                :posts_count => forum.posts.count(:id)}, {:id => forum.id})
       else
         destroy
       end

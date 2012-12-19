@@ -24,6 +24,9 @@ module SimpleForum
   mattr_accessor :sign_out_path
   @@sign_out_path = :destroy_user_session
 
+  mattr_accessor :show_deleted_posts
+  @@show_deleted_posts = true
+
   def self.user_class(&blk)
     Configuration.user_class(&blk)
   end

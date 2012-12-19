@@ -50,6 +50,13 @@
           <% end %>
         </ul>
       </div>
+      <div>
+        <ul>
+          <% resource.topics.find_each do |topic| %>
+            <li><%= topic.id %>. <%= topic.title %> <%= link_to t('simple_forum.delete', :default=>"Delete"), simple_forum.admin_forum_topic_path(resource, topic), :method => :delete, :confirm => t('simple_forum.are_you_sure', :default => 'Are you sure?') %></li>
+          <% end %>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
