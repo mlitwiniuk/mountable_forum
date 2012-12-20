@@ -1,0 +1,50 @@
+<tr id="<%= "post-#{post.id}" %>" class="<%= local_assigns[:preview] ? 'preview' : nil %>">
+  <td class="user-cell">
+          <span class="name">
+            <strong><%= post.user.name %></strong>
+          </span>
+    <br/>
+          <span class="postdetails">
+            <%= t('.user_joined') %>:
+            <%= l post.user.created_at.to_date %>
+            <br/>
+            <% if post.user.respond_to?(:forum_posts_count) %>
+              <%= t('.user_posts_count') %>:
+                <%= number_with_delimiter post.user.forum_posts_count %>
+            <% end %>
+          </span>
+  </td>
+  <td>
+    <span style="display: none;"><a name="<%= post.id %>"></a></span>
+    <table class="user-post" cellpadding="6" cellspacing="6" style="width: 100%;">
+      <tr class="post-header">
+        <td style="width: 40%;">
+          <%= t('.post_sent') %>:
+          <%= l post.created_at %>
+          /
+          <%= "#{time_ago_in_words(post.created_at)} #{t('simple_forum.ago', :default => 'ago')}" %>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1">
+          <div class="postbody">
+            <h4><%= link_to post.topic.title, simple_forum.forum_topic_path(post.forum, post.topic) %></h4>
+            <%= post.output %>
+            <% if !post.is_deleted? && post.is_edited? %>
+                <div class="post-edited">
+                  <%= t('.post_edited') %>
+                  <% if post.edited_by %>
+                      <%= t('simple_forum.by') %>
+                      <%= post.edited_by.name %>
+                  <% end %>
+                  <%= t('simple_forum.at') %>
+                  <%= l post.edited_at %>
+                </div>
+            <% end %>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+

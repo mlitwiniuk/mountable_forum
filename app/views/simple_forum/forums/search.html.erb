@@ -1,0 +1,9 @@
+
+<table class="topic-table forum-table" cellpadding="6" cellspacing="6">
+  <% for post in @posts do -%>
+      <%= render :partial => 'post', :locals => {:post => post} %>
+  <% end %>
+</table>
+
+<%= will_paginate @posts if respond_to?(:will_paginate) %>
+
