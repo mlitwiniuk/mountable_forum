@@ -14,6 +14,9 @@ SimpleForum::Engine.routes.draw do
         get :preview, :on => :collection
       end
     end
+    collection do
+      get :search
+    end
   end
 
   namespace :admin do
