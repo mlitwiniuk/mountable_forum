@@ -41,6 +41,7 @@ module SimpleForum
 
     before_validation :set_default_attributes, :on => :create
     after_create :create_initial_post
+    after_create :notify_user
 
     attr_accessor :body
     #attr_accessible :title, :body
@@ -125,6 +126,12 @@ module SimpleForum
       end
       p.save!
       @body = nil
+    end
+
+    def notify_user
+      if user && user.respond_to?(:topic_created)
+        user.topic_created(self)
+      end
     end
   end
 end
