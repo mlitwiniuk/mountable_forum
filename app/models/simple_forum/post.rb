@@ -112,7 +112,7 @@ module SimpleForum
     end
 
     def notify_user
-      if user && user.respond_to(:post_created)
+      if user && user.respond_to?(:post_created)
         user.post_created(self)
       end
     end
