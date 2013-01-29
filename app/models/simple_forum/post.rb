@@ -20,6 +20,7 @@ module SimpleForum
     before_validation :set_forum_id, :on => :create
 
     after_create :update_cached_fields
+    after_create :notify_user
     after_destroy :update_cached_fields
 
     scope :recent, order("#{quoted_table_name}.created_at DESC")
@@ -97,6 +98,12 @@ module SimpleForum
 
     def set_forum_id
       self.forum = topic.forum if topic
+    end
+
+    def notify_user
+      if user && user.respond_to(:post_created)
+        user.post_created(self)
+      end
     end
   end
 end
