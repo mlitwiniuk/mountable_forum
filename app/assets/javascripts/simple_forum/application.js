@@ -14,6 +14,6 @@
 //= require jquery_ujs
 //= require_self
 
-simple_forum = {
+window.simple_forum = {
     'translations':{}
 };

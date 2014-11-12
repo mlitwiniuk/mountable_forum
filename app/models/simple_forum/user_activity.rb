@@ -15,10 +15,10 @@ module SimpleForum
         read_at = hash[type][object.id]
         return unless read_at
 
-        if object.is_a?(SimpleForum::Forum)
+        if object.is_a?(::SimpleForum::Forum)
           recent_post = object.recent_post
           recent_post && recent_post.created_at > read_at
-        elsif object.is_a?(SimpleForum::Topic)
+        elsif object.is_a?(::SimpleForum::Topic)
           object.last_updated_at && object.last_updated_at > read_at
         elsif object.respond_to?(:updated_at)
           object.updated_at > self[object]
@@ -33,11 +33,11 @@ module SimpleForum
     end
 
     belongs_to :user,
-               :class_name => instance_eval(&SimpleForum.invoke(:user_class)).name
+               class_name: instance_eval(&::SimpleForum.invoke(:user_class)).name
 
-    belongs_to :memoryable, :polymorphic => true
+    belongs_to :memoryable, polymorphic: true
 
-    scope :only_read, where("#{quoted_table_name}.read_at IS NOT NULL")
+    scope :only_read, ->{ where("#{quoted_table_name}.read_at IS NOT NULL") }
 
     def self.recent_activity_for_user(user)
       if user && user.persisted?
@@ -62,7 +62,7 @@ module SimpleForum
 
     def self.bang(object, user)
       if am = load(object, user)
-        update_all({:read_at => Time.now}, {:id => am.id})
+        where(id: am.id).update_all(read_at: Time.now)
       else
         am = create_for(object, user)
       end
@@ -70,7 +70,7 @@ module SimpleForum
     end
 
     def self.load(object, user, conditions=nil)
-      scope = self.where({:memoryable_type => object.class.name, :memoryable_id => object.id, :user_id => user.id})
+      scope = self.where(memoryable_type: object.class.name, memoryable_id: object.id, user_id: user.id)
       scope = scope.where(conditions) if conditions
       scope.first
     end

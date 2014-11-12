@@ -31,7 +31,7 @@
           <%= t('.last_post') %>
         </th>
       </tr>
-      <% c.forums.each do |f| %>
+      <% c.forums.default_order.each do |f| %>
           <tr>
             <td class="icon-cell">
               <% if simple_forum_recent_activity?(f) %>

@@ -1,43 +1,43 @@
 module SimpleForum
   class Post < ::ActiveRecord::Base
     belongs_to :user,
-               :class_name => instance_eval(&SimpleForum.invoke(:user_class)).name
+               class_name: instance_eval(&::SimpleForum.invoke(:user_class)).name
 
     belongs_to :edited_by,
-               :class_name => instance_eval(&SimpleForum.invoke(:user_class)).name
+               class_name: instance_eval(&::SimpleForum.invoke(:user_class)).name
 
     belongs_to :deleted_by,
-               :class_name => instance_eval(&SimpleForum.invoke(:user_class)).name
+               class_name: instance_eval(&::SimpleForum.invoke(:user_class)).name
 
     belongs_to :topic,
-               :counter_cache => true,
-               :class_name => "SimpleForum::Topic"
+               counter_cache: true,
+               class_name: '::SimpleForum::Topic'
 
     belongs_to :forum,
-               :counter_cache => true,
-               :class_name => "SimpleForum::Forum"
+               counter_cache: true,
+               class_name: '::SimpleForum::Forum'
 
-    before_validation :set_forum_id, :on => :create
+    before_validation :set_forum_id, on: :create
 
     after_create :update_cached_fields
     after_create :notify_user
     after_destroy :update_cached_fields
 
-    scope :recent, order("#{quoted_table_name}.created_at DESC")
+    scope :recent, -> { order("#{quoted_table_name}.created_at DESC") }
+    scope :ordered, -> { order("#{quoted_table_name}.created_at ASC") }
 
-    #attr_accessible :body
-    validates :topic, :forum, :user, :presence => true
-    validates :body, :presence => true
+    validates :topic, :forum, :user, presence: true
+    validates :body, presence: true
 
-    validate :topic_must_not_be_closed, :on => :create
+    validate :topic_must_not_be_closed, on: :create
 
     def topic_must_not_be_closed
-      errors.add(:base, I18n.t('simple_forum.errors.topic_is_close', :default => "Topic is closed.")) if topic && topic.is_closed?
+      errors.add(:base, I18n.t('simple_forum.errors.topic_is_close', default: 'Topic is closed.')) if topic && topic.is_closed?
     end
 
     def on_page
-      before_count = topic.posts.where(["#{SimpleForum::Post.quoted_table_name}.created_at<?", created_at]).size
-      [((before_count + 1).to_f / SimpleForum::Post.per_page).ceil.to_i, 1].max
+      before_count = topic.posts.where(["#{::SimpleForum::Post.quoted_table_name}.created_at<?", created_at]).size
+      [((before_count + 1).to_f / ::SimpleForum::Post.per_page).ceil.to_i, 1].max
     end
 
     def self.per_page

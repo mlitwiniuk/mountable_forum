@@ -23,9 +23,9 @@
           <%= text_field_tag :user_name_like, "", :id => 'search_users_input', :placeholder => t('simple_forum.admin/forums.search_users', :default => 'Serach users') %>
           <ul id="search_users_result"></ul>
           <script type="text/javascript">
-              simple_forum.moderator_template = "<%= escape_javascript(render(:partial => 'moderator', :locals => {:f => f, :moderator => OpenStruct.new(:name => "temp_user_name", :id => "temp_user_id")})) %>";
-              simple_forum.user_search_path = "<%= escape_javascript(simple_forum.search_users_admin_forums_path(:format => :json)) %>";
-              simple_forum.translations['add_moderator'] = "<%= escape_javascript(t('simple_forum.admin/forums.add_moderator', :default => 'add')) %>";
+              window.simple_forum.moderator_template = "<%= escape_javascript(render(:partial => 'moderator', :locals => {:f => f, :moderator => OpenStruct.new(:name => "temp_user_name", :id => "temp_user_id")})) %>";
+              window.simple_forum.user_search_path = "<%= escape_javascript(simple_forum.search_users_admin_forums_path(:format => :json)) %>";
+              window.simple_forum.translations['add_moderator'] = "<%= escape_javascript(t('simple_forum.admin/forums.add_moderator', :default => 'add')) %>";
           </script>
 
           <%= f.hidden_field :moderator_ids, :value => nil, :multiple => true %>

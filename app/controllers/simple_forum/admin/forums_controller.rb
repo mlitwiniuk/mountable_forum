@@ -86,7 +86,7 @@ module SimpleForum
         unless p = params[:forum].presence
           {}
         else
-          p.permit(:name, :body, :position, :parent_id, :moderator_ids, :category_id, :is_topicable)
+          p.permit(:name, :body, :position, :parent_id, :moderator_ids, :category_id, :is_topicable, moderator_ids: [])
         end
       end
 
